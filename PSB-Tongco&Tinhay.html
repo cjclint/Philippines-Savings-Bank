@@ -1,0 +1,2375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philippine Savings Bank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #0a4d8c;
+            --primary-light: #1a6cb9;
+            --primary-dark: #063766;
+            --secondary: #e3172f;
+            --secondary-light: #f42a43;
+            --secondary-dark: #c10d22;
+            --accent: #3ec6e0;
+            --text-dark: #333;
+            --text-light: #777;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --hover-color: rgba(10, 77, 140, 0.05);
+            --transition-speed: 0.3s;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(10, 77, 140, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(10, 77, 140, 0.5);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 0;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-speed) ease;
+            z-index: 100;
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 10s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .company-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tagline {
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 5px;
+            position: relative;
+            z-index: 2;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .menu {
+            list-style: none;
+            padding: 15px 0;
+            margin-top: 10px;
+        }
+
+        .menu li {
+            padding: 14px 25px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            position: relative;
+            font-weight: 400;
+            overflow: hidden;
+        }
+
+        .menu li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background-color: var(--secondary);
+            transform: scaleY(0);
+            transition: transform 0.2s;
+        }
+
+        .menu li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 30px;
+        }
+
+        .menu li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .menu li.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+            border-right: 3px solid var(--secondary);
+        }
+
+        .menu li.active::before {
+            transform: scaleY(1);
+        }
+
+        .content {
+            margin-left: 280px;
+            padding: 40px;
+            flex: 1;
+            transition: all var(--transition-speed);
+        }
+
+        .content-section {
+            display: none;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            box-shadow: var(--shadow-sm);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 60px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .placeholder-text {
+            color: var(--text-light);
+            text-align: center;
+            padding: 80px 0;
+            font-style: italic;
+        }
+
+        /* Card styles */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .profile-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 4px solid rgba(255,255,255,0.8);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-card:hover .profile-img img {
+            transform: scale(1.08);
+        }
+
+        /* Stylish cards for other sections */
+        .info-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .info-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Buttons and links */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            box-shadow: var(--shadow-sm);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffce3a;
+        }
+
+        /* Custom styling for financial cards */
+        .financial-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .financial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .financial-card h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .financial-card h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 40px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        /* Stats counter animation */
+        .stat-counter {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .stat-counter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 240px;
+            }
+            .content {
+                margin-left: 240px;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .logo-container {
+                padding: 15px;
+            }
+            .company-name {
+                font-size: 18px;
+            }
+            .menu {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 5px;
+            }
+            .menu li {
+                padding: 10px 15px;
+                flex: 1 0 auto;
+                text-align: center;
+                min-width: 120px;
+            }
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="https://pbs.twimg.com/profile_images/1488299388396920832/Z5vRzLZt_400x400.jpg" alt="PSBank Logo" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 30%22%3E%3Crect fill%3D%22%23f1f1f1%22 width%3D%22100%22 height%3D%2230%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%228%22 fill%3D%22%23333%22%3EPSBank Logo%3C%2Ftext%3E%3C%2Fsvg%3E'">
+            <div class="company-name">Philippine Savings Bank</div>
+            <div class="tagline">We're With You</div>
+        </div>
+
+        <ul class="menu">
+            <li data-section="background">Background & History</li>
+            <li data-section="corporate-profile">Corporate Profile</li>
+            <li data-section="vision-mission">Vision, Mission & Values</li>
+            <li data-section="branches">Branches and Offices</li>
+            <li data-section="business-scope">Scope of Business</li>
+            <li data-section="products">Products and Services</li>
+            <li data-section="financial-highlights">Financial Highlights</li>
+            <li data-section="awards">Awards & Recognitions</li>
+            <li data-section="structure">Organizational Structure</li>
+            <li data-section="board">Board of Directors</li>
+            <li data-section="management">Management Committee</li>
+            <li data-section="capital">Capital Structure</li>
+            <li data-section="governance">Corporate Governance</li>
+            <li data-section="csr">Corporate Social Responsibility</li>
+            <li data-section="financial">Financial Performance</li>
+            <li data-section="team">Our Team</li>
+            <li data-section="references">References</li>
+            <li data-section="disclaimer">Disclaimer</li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="content-section active" id="background">
+            <h2 class="section-title">Background & History</h2>
+            <div>
+                <p>Philippine Savings Bank (PSBank or PSB) was established on June 30, 1959, initially to primarily engage in savings and mortgage banking in the Philippines. The bank began its operations in Manila and has since grown to become the second-largest savings bank in the Philippines.</p>
+                
+                <p>A significant milestone in PSBank's history came in 1983 when Metropolitan Bank and Trust Company (Metrobank) acquired a majority stake in the bank. This acquisition made PSBank a subsidiary of the Metrobank Group, one of the largest financial conglomerates in the Philippines. In 2004, Metrobank further increased its shareholdings to approximately 76%.</p>
+                
+                <p>The bank reached important operational milestones in the early 1990s. In 1991, PSBank was authorized to perform trust functions, expanding its service offerings. In 1995, the bank was granted a quasi-banking license, further enhancing its capabilities in the financial sector.</p>
+                
+                <p>Throughout its history, PSBank has focused primarily on retail and consumer banking, establishing itself as a key player in consumer loans such as auto loans, housing loans, and personal loans. The bank has consistently expanded its branch network and ATM presence across the Philippines to better serve its growing customer base.</p>
+                
+                <p>Today, PSBank operates from its headquarters in PSBank Tower, 777 Paseo de Roxas Corner Sedeño Street, Makati City, Philippines. As of recent reports, the bank maintains approximately 250 branches and over 550 ATMs nationwide, serving the banking needs of Filipinos across the country.</p>
+            </div>
+        </div>
+
+        <div class="content-section" id="corporate-profile">
+            <h2 class="section-title">Corporate Profile</h2>
+            <div>
+                <p>Philippine Savings Bank (PSBank) is a major thrift bank in the Philippines primarily engaged in savings and mortgage banking. As of 2023, it is the second-largest savings bank in the Philippines, with the bank primarily catering to the retail and consumer markets.</p>
+                
+                <p><strong>Ownership Structure:</strong></p>
+                <p>PSBank is a subsidiary of the Metrobank Group, with Metropolitan Bank and Trust Company (Metrobank) holding approximately 88% of its shares. The bank is publicly listed on the Philippine Stock Exchange (PSE) under the ticker symbol "PSB".</p>
+                
+                <p><strong>Corporate Organization:</strong></p>
+                <p>PSBank's operations are organized into four key business segments, each representing a strategic business unit that offers different products and serves different markets:</p>
+                <ul>
+                    <li>Consumer Banking</li>
+                    <li>Corporate Banking</li>
+                    <li>Branch Banking</li>
+                    <li>Treasury</li>
+                </ul>
+                
+                <p><strong>Partnerships and Affiliations:</strong></p>
+                <p>PSBank has a 30% ownership stake in Sumisho Motor Finance Corporation, a joint venture with Sumitomo Corporation of Japan (which holds 50%) and GT Capital (which holds 20%). Sumisho provides motorcycle financing solutions in the Philippines.</p>
+                
+                <p><strong>Network and Reach:</strong></p>
+                <p>As of December 31, 2023, PSBank operates 250 branches and maintains 556 automated teller machines (ATMs) nationwide, providing convenient banking services across the Philippines.</p>
+                
+                <p><strong>Regulatory Framework:</strong></p>
+                <p>PSBank was granted a quasi-banking license in 1995, expanding its financial service offerings. The bank is also authorized to perform trust functions, a capability it received approval for in 1991.</p>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For a more in-depth understanding, you can explore these documents directly on PSBank's Corporate Profile page:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/corporate-governance/?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Visit Corporate Governance Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="vision-mission">
+            <h2 class="section-title">Vision, Mission, Goals & Core Values</h2>
+            <div>
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Vision</h3>
+                    <p>To be the country's consumer and retail bank of choice.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Mission</h3>
+                    <p>To provide innovative and customer-focused financial solutions that empower individuals and businesses.</p>
+                </div>
+                
+                <div>
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Core Values</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Customer Focus</h4>
+                            <p>Putting customers at the center of everything we do and delivering exceptional service.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Integrity</h4>
+                            <p>Adhering to high ethical standards and maintaining trust in all our dealings.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Excellence</h4>
+                            <p>Striving for the highest standards of quality and performance in our services.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Teamwork</h4>
+                            <p>Collaborating effectively to achieve common goals and deliver value to stakeholders.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Innovation</h4>
+                            <p>Embracing new ideas and technologies to continuously improve our products and services.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 30px; font-style: italic; color: #666; font-size: 0.9em;">Note: These statements on vision, mission, and core values reflect PSBank's commitment to excellence in banking and financial services.</p>
+            </div>
+        </div>
+
+        <div class="content-section" id="branches">
+            <h2 class="section-title">Branches and Offices</h2>
+            <div>
+                <p>PSBank has a widespread network of branches and ATMs across the Philippines. As of the latest data, the bank maintains approximately 250 branches and over 550 ATMs nationwide, serving customers throughout the country.</p>
+                
+                <p>The bank's headquarters is located at:</p>
+                <address style="margin: 15px 0; font-style: normal;">
+                    <strong>PSBank Tower</strong><br>
+                    777 Paseo de Roxas Corner Sedeño Street<br>
+                    Makati City, Philippines
+                </address>
+                
+                <p>To find specific branch addresses and ATM locations near you, please visit the official PSBank website and use their ATM/Branch Finder tool.</p>
+                
+                <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p><strong>Note:</strong> Branch operating hours may vary by location and may be subject to change during holidays or special circumstances. For the most up-to-date information, please check the official PSBank website or contact their customer service.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="business-scope">
+            <h2 class="section-title">Scope of Business/Operation</h2>
+            <div>
+                <p>Philippine Savings Bank (PSBank) operates as a thrift bank with a wide range of financial products and services focused primarily on the consumer and retail banking sectors. The bank's scope of business encompasses:</p>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Core Business Areas</h3>
+                    <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.6;">
+                        <li><strong>Retail Banking Services:</strong> Deposit accounts, consumer loans, and various payment services for individual customers.</li>
+                        <li><strong>Consumer Lending:</strong> Specialization in auto loans, home loans, and personal loans for retail customers.</li>
+                        <li><strong>SME Banking:</strong> Financial solutions for small and medium enterprises, including business loans and cash management services.</li>
+                        <li><strong>Trust Services:</strong> Wealth management and investment solutions for high-value clients.</li>
+                        <li><strong>Digital Banking:</strong> Online and mobile banking platforms providing convenient access to banking services.</li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Market Focus</h3>
+                    <p>PSBank primarily serves:</p>
+                    <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.6;">
+                        <li>Individual consumers from various income segments</li>
+                        <li>Families seeking housing and automotive financing</li>
+                        <li>Small and medium enterprises</li>
+                        <li>Urban and semi-urban customers across the Philippines</li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Banking Licenses and Capabilities</h3>
+                    <p>PSBank operates under the following licenses and regulatory approvals:</p>
+                    <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.6;">
+                        <li>Thrift banking license from the Bangko Sentral ng Pilipinas (BSP)</li>
+                        <li>Quasi-banking license (granted in 1995)</li>
+                        <li>Trust banking license (granted in 1991)</li>
+                        <li>Electronic banking authorization</li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px;">Geographic Reach</h3>
+                    <p>PSBank maintains a nationwide presence through its extensive branch and ATM network, serving customers across major urban centers, provincial capitals, and developing areas throughout the Philippines. The bank's operational coverage extends to:</p>
+                    <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.6;">
+                        <li>Metro Manila and Greater Manila Area</li>
+                        <li>Luzon</li>
+                        <li>Visayas</li>
+                        <li>Mindanao</li>
+                    </ul>
+                </div>
+                
+                <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p>As a member of the Metrobank Group, PSBank leverages strategic synergies with its parent company and other affiliates to enhance its market positioning and service offerings while maintaining its distinct focus on consumer and retail banking.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="products">
+            <h2 class="section-title">Products and Services</h2>
+            <div>
+                <p>Philippine Savings Bank (PSBank) offers a comprehensive range of financial products and services designed to meet the needs of individual consumers and small to medium enterprises:</p>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Loans</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Auto Loan</h4>
+                            <p>Financing solutions for the purchase of new and used vehicles with flexible payment terms.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Home Loan</h4>
+                            <p>Mortgage products for home purchase, construction, renovation, and refinancing.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Flexi Personal Loan</h4>
+                            <p>Multi-purpose loans for various personal financial needs with convenient repayment options.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">SME Business Loan</h4>
+                            <p>Financing options for small and medium enterprises to support business growth and operations.</p>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Deposits</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Savings Accounts</h4>
+                            <p>Various savings account options with different features to suit different financial needs and goals.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Checking Accounts</h4>
+                            <p>Transactional accounts that offer check-writing privileges for convenient payments.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Time Deposits</h4>
+                            <p>Fixed-term deposit accounts with competitive interest rates for different time periods.</p>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Investments</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">PSBank Money Market Fund</h4>
+                            <p>An investment fund that focuses on short-term, high-quality money market instruments.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Investment Management</h4>
+                            <p>Professional management of investment portfolios to meet specific financial objectives.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Escrow Services</h4>
+                            <p>Third-party services that hold and regulate payment of funds for two parties in a transaction.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Personal Management Trust</h4>
+                            <p>Comprehensive trust services for wealth management and preservation.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Employee Benefit Trust</h4>
+                            <p>Trust services designed for employee compensation and benefit programs.</p>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Insurance</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">AXA Life and Non-Life Insurance Products</h4>
+                            <p>Various insurance solutions offered in partnership with AXA, including life and non-life coverage options.</p>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Other Services</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">E-Banking</h4>
+                            <p>Digital banking platforms for convenient online and mobile account access and transactions.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Debit and Prepaid Mastercards</h4>
+                            <p>Payment cards linked to deposit accounts or preloaded with funds for purchases and ATM withdrawals.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Credit Mastercard</h4>
+                            <p>Credit card services with various features and benefits for everyday purchases and special transactions.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Online Account Opening</h4>
+                            <p>Convenient digital process for opening new accounts without visiting a branch.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Cardless Withdrawal</h4>
+                            <p>Capability to withdraw funds from ATMs without using a physical card.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Mobile Check Deposit</h4>
+                            <p>Feature allowing customers to deposit checks using their mobile devices.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Bills Payment</h4>
+                            <p>Convenient payment facilities for various utilities and service providers.</p>
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">Remittance Services</h4>
+                            <p>Fund transfer services for sending and receiving money domestically.</p>
+                        </li>
+                    </ul>
+
+                    <div style="margin-top: 30px; text-align: center;">
+                        <p>For a more in-depth understanding, you can explore these documents directly on PSBank's Corporate page:</p>
+                        <div style="margin-top: 15px;">
+                            <a href="https://www.psbank.com.ph/about-psbank/corporate-governance/?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Visit Corporate Governance Page</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p><strong>Note:</strong> Product features, terms, and availability may change over time. For the most current and detailed information about PSBank's products and services, please visit their official website or contact their customer service.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="financial-highlights">
+            <h2 class="section-title">Operational/Financial Highlights</h2>
+            <div>
+                <p>Philippine Savings Bank continues to demonstrate solid financial performance and operational excellence, maintaining its position as one of the leading thrift banks in the Philippines.</p>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Key Financial Metrics</h3>
+                    
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background-color: #0a4d8c; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Metric</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2023</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2022</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2021</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Total Assets</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱275.6 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱261.8 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱250.9 billion</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Net Income</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱3.2 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱2.9 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱1.5 billion</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Loans and Receivables</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱168.3 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱160.2 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱142.5 billion</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Deposits</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱216.7 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱207.5 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱192.4 billion</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Capital Adequacy Ratio</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">24.5%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">23.7%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">21.9%</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Return on Equity</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">8.8%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">8.3%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">4.5%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Return on Assets</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">1.2%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">1.1%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">0.6%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Operational Highlights</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Network Expansion</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">250</span><br>Branches nationwide</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">556</span><br>ATMs deployed</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Digital Transformation</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">65%</span><br>Transactions through digital channels</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">1.8M+</span><br>Active digital users</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Market Leadership</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">#1</span><br>In Auto Loans among thrift banks</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">#2</span><br>Largest thrift bank in the Philippines</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Growth Trends</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 20px;">
+                        <div style="flex: 1; min-width: 230px;">
+                            <h4 style="margin-bottom: 10px;">Consumer Loan Portfolio Growth</h4>
+                            <div style="background-color: #f5f5f5; border-radius: 8px; padding: 15px;">
+                                <div style="height: 25px; background-color: #0a4d8c; width: 85%; margin-bottom: 8px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2021</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+8.5%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 90%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2022</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+9.0%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 95%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2023</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+9.5%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 230px;">
+                            <h4 style="margin-bottom: 10px;">Digital Banking Adoption</h4>
+                            <div style="background-color: #f5f5f5; border-radius: 8px; padding: 15px;">
+                                <div style="height: 25px; background-color: #0a4d8c; width: 75%; margin-bottom: 8px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2021</span>
+                                    <span style="font-size: 14px; font-weight: bold;">45%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 85%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2022</span>
+                                    <span style="font-size: 14px; font-weight: bold;">55%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 100%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2023</span>
+                                    <span style="font-size: 14px; font-weight: bold;">65%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p><strong>Note:</strong> The financial and operational data presented here are illustrative and may not reflect the actual current performance of PSBank. For the most accurate and up-to-date financial information, please refer to PSBank's official financial statements and annual reports published on their website or filed with regulatory authorities.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="awards">
+            <h2 class="section-title">Awards and Recognition</h2>
+            <div>
+                <p>PSBank has consistently been recognized for its excellence in banking, customer service, corporate governance, and as an employer. These accolades reflect our unwavering commitment to delivering world-class banking experiences and upholding the highest standards in all aspects of our operations.</p>
+                
+                <div style="margin: 20px 0 30px;">
+                    <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
+                        <button onclick="showAwardTab('all-awards')" class="award-tab-btn active" style="padding: 10px 20px; background-color: #0a4d8c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">All Years</button>
+                        <button onclick="showAwardTab('excellence')" class="award-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Banking Excellence</button>
+                        <button onclick="showAwardTab('customer')" class="award-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Customer Service</button>
+                        <button onclick="showAwardTab('governance')" class="award-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Corporate Governance</button>
+                        <button onclick="showAwardTab('employer')" class="award-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Employer Awards</button>
+                    </div>
+                </div>
+                
+                <div id="all-awards" class="award-tab-content" style="display: block;">
+                    <div style="margin: 25px 0;">
+                        <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">2024</h3>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Best Digital Banking Experience</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Asian Banking & Finance (2018)</p>
+                                    </div>
+                                </div>
+                                <p>Recognized for innovative digital banking solutions and superior customer experience.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Financial Inclusion Excellence Award</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">The Asian Banker (2018)</p>
+                                    </div>
+                                </div>
+                                <p>Awarded for outstanding initiatives that expanded banking access to underserved communities.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Forbes World's Best Banks</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Forbes (2023)</p>
+                                    </div>
+                                </div>
+                                <p>Ranked 7th among Philippine banks in Forbes' global listing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="excellence" class="award-tab-content" style="display: none;">
+                    <div style="margin: 25px 0;">
+                        <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Banking Excellence Awards</h3>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Best Digital Banking Experience</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Asian Banking & Finance (2018)</p>
+                                    </div>
+                                </div>
+                                <p>Recognized for innovative digital banking solutions and superior customer experience.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Financial Inclusion Excellence Award</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">The Asian Banker (2018)</p>
+                                    </div>
+                                </div>
+                                <p>Awarded for outstanding initiatives that expanded banking access to underserved communities.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Forbes World's Best Banks</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Forbes (2023)</p>
+                                    </div>
+                                </div>
+                                <p>Ranked 7th among Philippine banks in Forbes' global listing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="customer" class="award-tab-content" style="display: none;">
+                    <div style="margin: 25px 0;">
+                        <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Customer Service Excellence</h3>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Best Customer Experience in Asia Pacific</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">5th Customer Experience Asia Excellence Awards (2019)</p>
+                                    </div>
+                                </div>
+                                <p>Secured the Gold award, distinguishing PSBank as the most-awarded company for 2019.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="governance" class="award-tab-content" style="display: none;">
+                    <div style="margin: 25px 0;">
+                        <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Corporate Governance Awards</h3>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Double Golden Arrow Recognition</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Institute of Corporate Directors (2023)</p>
+                                    </div>
+                                </div>
+                                <p>Received for excellence in corporate governance.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Outstanding Stakeholder Award</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Bangko Sentral ng Pilipinas (2023)</p>
+                                    </div>
+                                </div>
+                                <p>Conferred for significant contributions to the banking industry.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="employer" class="award-tab-content" style="display: none;">
+                    <div style="margin: 25px 0;">
+                        <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Employer Awards</h3>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <span style="color: #0a4d8c; font-size: 20px;">🏆</span>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0; color: #0a4d8c;">Philippines Best Employer Brand Award</h4>
+                                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">World HRD Congress and Stars of the Industry Group (2019)</p>
+                                    </div>
+                                </div>
+                                <p>Conferred for the second time, recognizing PSBank's excellence in talent attraction, retention, and employee development programs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For a more comprehensive list of our awards and recognitions, please visit:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/awards-recognition/?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View All Awards</a>
+                    </div>
+                </div>
+
+                <script>
+                function showAwardTab(tabId) {
+                    // Hide all tabs
+                    var tabContents = document.getElementsByClassName("award-tab-content");
+                    for (var i = 0; i < tabContents.length; i++) {
+                        tabContents[i].style.display = "none";
+                    }
+                    
+                    // Remove active class from all buttons
+                    var tabButtons = document.getElementsByClassName("award-tab-btn");
+                    for (var i = 0; i < tabButtons.length; i++) {
+                        tabButtons[i].style.backgroundColor = "#f1f1f1";
+                        tabButtons[i].style.color = "#333";
+                    }
+                    
+                    // Show the selected tab
+                    document.getElementById(tabId).style.display = "block";
+                    
+                    // Set active button
+                    event.currentTarget.style.backgroundColor = "#0a4d8c";
+                    event.currentTarget.style.color = "white";
+                }
+                </script>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Award Gallery</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <img src="https://www.pnb.com.ph/wp-content/uploads/pr-pnb-savings-bank-bags-2-awards.jpg" alt="PSBank Awards" style="width: 100%; height: auto; border-radius: 5px;">
+                            <p style="margin-top: 15px; text-align: center; font-style: italic; color: #666;">PSBank receiving awards at the ceremony</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <img src="https://www.pnb.com.ph/wp-content/uploads/pr-pnb-savings-bank-power-saver-account-wins-philippine-best-brand-awads.jpg" alt="PSBank Best Brand Award" style="width: 100%; height: auto; border-radius: 5px;">
+                            <p style="margin-top: 15px; text-align: center; font-style: italic; color: #666;">Power Saver Account wins Philippine Best Brand Award</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Consistent Recognition</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 200px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Corporate Governance</h4>
+                            <p>Multiple Golden Arrow recognitions from the Institute of Corporate Directors</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">SSS Partnership</h4>
+                            <p>Repeated recognition as Best Disbursement Partner in the Thrift Bank category</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Communication Excellence</h4>
+                            <p>Multiple Anvil and Quill awards for outstanding communications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="structure">
+            <h2 class="section-title">Organizational Structure</h2>
+            <div>
+                <p>Philippine Savings Bank (PSBank) maintains a comprehensive organizational structure designed to ensure effective governance, risk management, and operational efficiency. The structure is composed of various committees, oversight bodies, and operational divisions that work together to achieve the bank's strategic objectives.</p>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Management Committees</h3>
+                    <p>These committees are integral to PSBank's decision-making processes, providing oversight and strategic direction in their respective areas:</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Credit Committee</h4>
+                            <p>Oversees the bank's credit policies and loan approvals.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Assets and Liabilities Committee (ALCO)</h4>
+                            <p>Manages the bank's balance sheet, focusing on asset-liability matching and liquidity.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Anti-Money Laundering (AML) Compliance Committee</h4>
+                            <p>Ensures adherence to AML regulations and policies.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Outsourcing Committee</h4>
+                            <p>Evaluates and oversees third-party service providers.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">IT Steering Committee</h4>
+                            <p>Guides the bank's information technology strategy and initiatives.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Emergency Committee</h4>
+                            <p>Develops and manages the bank's emergency response plans.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Policy Committee</h4>
+                            <p>Formulates and reviews internal policies and procedures.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Personnel Committee</h4>
+                            <p>Handles matters related to human resources and staffing.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Retirement Committee</h4>
+                            <p>Manages the bank's retirement plans and benefits.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Related Party Transactions Management Committee</h4>
+                            <p>Monitors and approves transactions involving related parties.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Investment Committee</h4>
+                            <p>Oversees the bank's investment strategies and portfolios.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Occupational Safety and Health Committee</h4>
+                            <p>Ensures workplace safety and compliance with health regulations.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Oversight Bodies and Support Offices</h3>
+                    <p>These entities provide independent oversight and support to maintain the bank's integrity and compliance:</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Risk Oversight Committee</h4>
+                            <p>Monitors and assesses the bank's risk management framework.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Risk Management Office</h4>
+                            <p>Implements risk management policies and procedures.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Audit Committee</h4>
+                            <p>Oversees internal and external audit functions.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Corporate Governance Committee</h4>
+                            <p>Ensures adherence to corporate governance standards.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Related Party Transactions Committee</h4>
+                            <p>Reviews and approves related party transactions.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">AML Oversight Committee</h4>
+                            <p>Provides additional oversight on AML compliance.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Compliance Office</h4>
+                            <p>Ensures compliance with regulatory requirements and internal policies.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Internal Audit Group</h4>
+                            <p>Conducts internal audits to evaluate the effectiveness of controls and processes.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Operational Divisions</h3>
+                    <p>These divisions handle the bank's day-to-day operations and customer-facing services:</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Collections and Remedial Management Division</h4>
+                            <p>Manages loan collections and recovery processes.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Credit Processing and Evaluation Division</h4>
+                            <p>Handles the assessment and processing of credit applications.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; background-color: #f0f8ff; padding: 20px; border-radius: 8px; text-align: center;">
+                    <p><strong>For a detailed view of PSBank's organizational structure, you can access the official organizational chart:</strong></p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/media/8812/psbank-organizational-chart.pdf" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Organizational Chart (PDF)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="board">
+            <h2 class="section-title">Board of Directors</h2>
+            <div>
+                <p>The Board of Directors is responsible for the overall strategic direction of the bank. It consists of accomplished leaders with diverse backgrounds in banking, finance, and business management. The Board meets regularly to review the bank's performance and ensure compliance with regulatory requirements.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px;">
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://cdn.theorg.com/4079895b-d08e-4971-a16d-5ddc4d0b17d8_thumb.jpg" alt="Vicente R. Cuna, Jr." onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EVC%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Vicente R. Cuna, Jr.</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Chairman</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 63</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Chairman since March 31, 2023</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Cuna has been instrumental in steering PSBank's strategic direction. He also serves as a Director at Metropolitan Bank and Trust Company.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://www.psbank.com.ph/media/4327/arthur-ty.png" alt="Arthur V. Ty" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EAT%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Arthur V. Ty</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Vice Chairman</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 58</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Vice Chairman since 2001</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Ty holds significant positions in various financial institutions, including Chairman roles at Metropolitan Bank and Trust Company and GT Capital Holdings, Inc.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOuVssXviKB3qdZrekiQE3-rPz5rCMoxpwzw&s" alt="Jose Vicente L. Alde" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EJA%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Jose Vicente L. Alde</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">President / Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 59</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> President since April 2018, Director since 2016</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Alde has a strong background in computer science and business management, having graduated cum laude from the University of the Philippines and earned his master's from the Asian Institute of Management.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwafrU_YiBmHHLJ_fa6jp1F0_dCwMUpiZ7pw&s" alt="Eduardo A. Sahagun" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EES%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Eduardo A. Sahagun</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Independent Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 68</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since April 23, 2017</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Sahagun brings a wealth of experience from his leadership roles in various corporations, including Phinma Solar Energy Corporation and Union Galvasteel Corporation.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr-9iu_LuOW4DtNdHcI_eK0xKIqlXTFejwPA&s" alt="Rufino Luis T. Manotok" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3ERM%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Rufino Luis T. Manotok</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Independent Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 74</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since March 31, 2023</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Manotok has held significant positions in both the private and public sectors, offering valuable insights into corporate governance and strategic planning.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://media.licdn.com/dms/image/v2/C4D03AQGVx1mfMrJ2Xg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516781421401?e=2147483647&v=beta&t=S8mlC-x_vwQD-Vu_6-WWocco38vaBT3y2qm_cMgK3sk" alt="Ronald Luis S. Goseco" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3ERG%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Ronald Luis S. Goseco</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Independent Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 69</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since September 20, 2023</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Mr. Goseco's extensive experience in risk management and corporate strategy enhances the board's oversight capabilities.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://media.licdn.com/dms/image/v2/C4E03AQF3RFAaACJPOQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1564474066376?e=2147483647&v=beta&t=RMF-U4LJMylsTPsVOIrZxc3gyiVikmivsJlCncSXdkM" alt="Ferlou I. Evangelista" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EFE%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Ferlou I. Evangelista</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 64</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since March 31, 2024</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Ms. Evangelista is a Certified Public Accountant with a strong background in commerce, contributing to the bank's financial oversight.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://media.licdn.com/dms/image/v2/C4E03AQHBefj0HRECMw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1548229072547?e=2147483647&v=beta&t=f6DqCLDAsoTA3EQ7AiHjbzhu0Fefu1LQ8SOVsqOZO-4" alt="Frances Gail E. Male" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EFM%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Frances Gail E. Male</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 50</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since March 31, 2024</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Ms. Male leads the Credit Cards, Personal Loans, and Retail Digital Channel Group at Metropolitan Bank and Trust Company, bringing valuable retail banking experience.</p>
+                    </div>
+                    
+                    <div class="profile-card" style="background-color: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div class="profile-img">
+                            <img src="https://www.theworldfolio.com/img_db/people/people-59d61dc2d6111.jpg" alt="Cecilia C. Borromeo" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3ECB%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: #0a4d8c; margin-bottom: 5px;">Cecilia C. Borromeo</h3>
+                        <p style="font-weight: bold; color: #333; margin-bottom: 15px;">Independent Director</p>
+                        <div style="margin-bottom: 15px;">
+                            <p style="margin-bottom: 5px;"><strong>Age:</strong> 65</p>
+                            <p style="margin-bottom: 5px;"><strong>Tenure:</strong> Since January 15, 2025</p>
+                        </div>
+                        <p style="font-size: 14px; line-height: 1.5; color: #555;">Ms. Borromeo's extensive experience in banking and finance adds depth to the board's strategic discussions.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 40px; text-align: center;">
+                    <p>For more detailed information about PSBank's Board of Directors, including their roles in various board-level committees, please visit:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/principal-officers/" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Official PSBank Website</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="management">
+            <h2 class="section-title">Management Committee</h2>
+            <div>
+                <p>PSBank's governance and operational framework consists of various committees and bodies that ensure effective management, oversight, and operational excellence. These entities work together to implement the strategic direction set by the Board of Directors.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Management Committees</h3>
+                    <p>These committees are integral to PSBank's decision-making processes, providing oversight and strategic direction in their respective areas:</p>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Credit Committee</h4>
+                                <p>Oversees the bank's credit policies and loan approvals.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Assets and Liabilities Committee (ALCO)</h4>
+                                <p>Manages the bank's balance sheet, focusing on asset-liability matching and liquidity.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Anti-Money Laundering (AML) Compliance Committee</h4>
+                                <p>Ensures adherence to AML regulations and policies.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Outsourcing Committee</h4>
+                                <p>Evaluates and oversees third-party service providers.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">IT Steering Committee</h4>
+                                <p>Guides the bank's information technology strategy and initiatives.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Emergency Committee</h4>
+                                <p>Develops and manages the bank's emergency response plans.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Policy Committee</h4>
+                                <p>Formulates and reviews internal policies and procedures.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Personnel Committee</h4>
+                                <p>Handles matters related to human resources and staffing.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Retirement Committee</h4>
+                                <p>Manages the bank's retirement plans and benefits.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Related Party Transactions Management Committee</h4>
+                                <p>Monitors and approves transactions involving related parties.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Investment Committee</h4>
+                                <p>Oversees the bank's investment strategies and portfolios.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Occupational Safety and Health Committee</h4>
+                                <p>Ensures workplace safety and compliance with health regulations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Oversight Bodies and Support Offices</h3>
+                    <p>These entities provide independent oversight and support to maintain the bank's integrity and compliance:</p>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Risk Oversight Committee</h4>
+                                <p>Monitors and assesses the bank's risk management framework.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Risk Management Office</h4>
+                                <p>Implements risk management policies and procedures.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Audit Committee</h4>
+                                <p>Oversees internal and external audit functions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Corporate Governance Committee</h4>
+                                <p>Ensures adherence to corporate governance standards.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Related Party Transactions Committee</h4>
+                                <p>Reviews and approves related party transactions.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">AML Oversight Committee</h4>
+                                <p>Provides additional oversight on AML compliance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Compliance Office</h4>
+                                <p>Ensures compliance with regulatory requirements and internal policies.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Internal Audit Group</h4>
+                                <p>Conducts internal audits to evaluate the effectiveness of controls and processes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Operational Divisions</h3>
+                    <p>These divisions handle the bank's day-to-day operations and customer-facing services:</p>
+                    
+                    <div style="margin: 25px 0;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Collections and Remedial Management Division</h4>
+                                <p>Manages loan collections and recovery processes.</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <h4 style="color: #0a4d8c; margin-bottom: 10px;">Credit Processing and Evaluation Division</h4>
+                                <p>Handles the assessment and processing of credit applications.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For a visual representation of PSBank's organizational structure, you can view the official organizational chart:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/media/8131/psbank-organizational-chart.pdf?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Organizational Chart (PDF)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="capital">
+            <h2 class="section-title">Capital Structure and Adequacy</h2>
+            <div>
+                <p>PSBank maintains a robust capital structure that supports its business operations while ensuring compliance with regulatory requirements and providing security to depositors and investors.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Capital Structure Components</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Paid-in Capital and Surplus</h4>
+                            <p>These constitute the bank's core capital base, providing a buffer against potential losses and supporting business expansion.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Bonds Payable</h4>
+                            <p>As of December 31, 2022, PSBank had bonds payable amounting to PHP 4.65 billion. These bonds were issued in February 2020 with a tenor of 3 years and an interest rate of 4.50% per annum, payable quarterly.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Bills Payable</h4>
+                            <p>The bank reported bills payable of PHP 1.19 billion, primarily from interbank loan borrowings.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 40px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                        <span style="display: inline-flex; align-items: center; margin-right: 10px;">📊</span>
+                        Capital Adequacy Ratios
+                    </h3>
+                    
+                    <p style="margin-bottom: 25px;">PSBank consistently maintains capital adequacy ratios (CAR) well above the minimum regulatory requirements set by the Bangko Sentral ng Pilipinas (BSP), underscoring its financial stability and prudent risk management.</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 40px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 5px solid #0a4d8c;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px; text-align: center;">As of December 31, 2024</h4>
+                            <div style="margin: 20px 0; text-align: center;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">Total Capital Funds</span>
+                                    <span style="display: block; font-size: 24px; font-weight: bold; color: #0a4d8c;">PHP 44 billion</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                                    <div>
+                                        <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">CAR</span>
+                                        <span style="display: block; font-size: 22px; font-weight: bold; color: #0a4d8c;">23.6%</span>
+                                    </div>
+                                    <div>
+                                        <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">CET1 Ratio</span>
+                                        <span style="display: block; font-size: 22px; font-weight: bold; color: #0a4d8c;">22.5%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 5px solid #0a4d8c;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px; text-align: center;">As of December 31, 2023</h4>
+                            <div style="margin: 20px 0; text-align: center;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">Total Capital Funds</span>
+                                    <span style="display: block; font-size: 24px; font-weight: bold; color: #0a4d8c;">PHP 40 billion</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                                    <div>
+                                        <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">CAR</span>
+                                        <span style="display: block; font-size: 22px; font-weight: bold; color: #0a4d8c;">24.5%</span>
+                                    </div>
+                                    <div>
+                                        <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">CET1 Ratio</span>
+                                        <span style="display: block; font-size: 22px; font-weight: bold; color: #0a4d8c;">23.6%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 5px solid #0a4d8c;">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px; text-align: center;">As of December 31, 2022</h4>
+                            <div style="margin: 20px 0; text-align: center;">
+                                <div style="margin-bottom: 20px;">
+                                    <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">Total Capital Funds</span>
+                                    <span style="display: block; font-size: 24px; font-weight: bold; color: #0a4d8c;">PHP 37.14 billion</span>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <span style="display: block; font-size: 16px; color: #555; margin-bottom: 5px;">Year-on-Year Increase</span>
+                                    <span style="display: block; font-size: 22px; font-weight: bold; color: #0a4d8c;">6.44%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>These ratios are significantly higher than the BSP's minimum requirements, indicating PSBank's strong capital position and its ability to absorb potential losses.</p>
+                </div>
+                
+                <div style="margin: 40px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                        <span style="display: inline-flex; align-items: center; margin-right: 10px;">🧮</span>
+                        Capital Management Strategy
+                    </h3>
+                    
+                    <p style="margin-bottom: 25px;">PSBank's capital management strategy focuses on maintaining a healthy capital base to support its business objectives and to ensure compliance with regulatory requirements. The bank regularly assesses its capital structure in light of changing economic conditions and risk profiles.</p>
+                    
+                    <div style="background-color: #f9f9f9; padding: 25px; border-radius: 8px; margin-bottom: 30px;">
+                        <h4 style="color: #0a4d8c; margin-bottom: 15px;">Key aspects of PSBank's capital management include:</h4>
+                        
+                        <div style="margin: 20px 0;">
+                            <h5 style="font-weight: bold; margin-bottom: 8px;">Dividend Policy</h5>
+                            <p>PSBank declares quarterly dividends of PHP 0.75 per share, aligning with its policy to provide consistent returns to shareholders while maintaining sufficient capital for growth.</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <h5 style="font-weight: bold; margin-bottom: 8px;">Risk Management</h5>
+                            <p>The bank employs various risk assessment tools, including stress testing and sensitivity analysis, to evaluate the impact of adverse market conditions on its capital adequacy.</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <h5 style="font-weight: bold; margin-bottom: 8px;">Regulatory Compliance</h5>
+                            <p>PSBank ensures adherence to BSP guidelines and international banking standards, reinforcing its commitment to sound banking practices.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For more detailed information, you can access PSBank's official financial reports:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/financial-reports/" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Financial Reports</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="governance">
+            <h2 class="section-title">Corporate Governance</h2>
+            <div>
+                <p>PSBank maintains a robust corporate governance framework designed to ensure transparency, accountability, and ethical practices in all aspects of its operations. The bank adheres to the highest standards of corporate governance in accordance with regulatory requirements and industry best practices.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Key Corporate Governance Documents</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Corporate Governance Manual</h4>
+                            <p>This manual serves as the bank's guide in implementing governance standards, including compliance with the Bangko Sentral ng Pilipinas (BSP) Circular No. 969 and the Securities and Exchange Commission (SEC) Memorandum Circular No. 19 s2016. It outlines the roles and responsibilities of the Board of Directors, management, and staff in upholding good governance practices.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Board-Level Committees</h4>
+                            <p>PSBank has established various committees to oversee specific areas of governance, such as the Audit Committee, Risk Oversight Committee, and Corporate Governance Committee. Each committee has its own charter detailing its duties and responsibilities.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Corporate Governance Committee Charter</h4>
+                            <p>This charter defines the mandate of the Corporate Governance Committee, which includes developing and reviewing governance policies, overseeing the nomination process for board members, and ensuring the board's effectiveness.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Integrated Annual Corporate Governance Report (I-ACGR)</h4>
+                            <p>The I-ACGR provides an annual assessment of the bank's adherence to governance standards, including training programs for directors and evaluations of board performance.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Governance Principles</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 250px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 36px; color: #0a4d8c; margin-bottom: 15px;">
+                                <span>⚖️</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Transparency</h4>
+                            <p>Ensuring clear disclosure of information to stakeholders</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 250px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 36px; color: #0a4d8c; margin-bottom: 15px;">
+                                <span>🔍</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Accountability</h4>
+                            <p>Taking responsibility for decisions and actions</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 250px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 36px; color: #0a4d8c; margin-bottom: 15px;">
+                                <span>🤝</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Fairness</h4>
+                            <p>Treating all stakeholders equitably and impartially</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 250px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 36px; color: #0a4d8c; margin-bottom: 15px;">
+                                <span>🛡️</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Integrity</h4>
+                            <p>Upholding ethical standards in all business practices</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For a more in-depth understanding, you can explore these documents directly on PSBank's Corporate Governance page:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/corporate-governance/?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Visit Corporate Governance Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="csr">
+            <h2 class="section-title">Corporate Social Responsibility</h2>
+            <div>
+                <p>PSBank is committed to making a positive impact on society through its Corporate Social Responsibility (CSR) initiatives. The bank's CSR programs focus on education, community development, support for persons with disabilities, environmental sustainability, and financial literacy.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Educational Assistance Programs</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">PSBank Educational Assistance Program</h4>
+                            <p>Since 2008, this program has provided scholarships to students from Chinese-Filipino schools, benefiting 51 elementary, high school, and college scholars.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Save It Forward Program</h4>
+                            <p>In partnership with World Vision and Resources for the Blind, this initiative sponsors the education of indigent and visually impaired children, enabling them to complete their elementary or high school education.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Community Engagement and Volunteerism</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Blood Donation Drives</h4>
+                            <p>Organized bloodletting events have benefited numerous individuals in need of blood transfusions.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Brigada Eskwela</h4>
+                            <p>PSBank employees actively participate in the annual school maintenance program, assisting in preparing public schools for the new academic year.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Solar Lamp Distribution</h4>
+                            <p>In areas with limited access to electricity, PSBank has distributed solar-powered lamps to enhance the quality of life for residents.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Support for Persons with Disabilities (PWDs)</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Resources for the Blind</h4>
+                            <p>PSBank has been collaborating with this organization for over two decades, supporting programs that promote the welfare and empowerment of visually impaired individuals.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Environmental Sustainability Initiatives</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Sustainable Finance Framework</h4>
+                            <p>The bank formalized this framework in 2021 to incorporate environmental, social, and governance (ESG) criteria into its business operations, products, and services.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Green PIN Initiative</h4>
+                            <p>Launched in 2023, this digital solution allows clients to activate their ATM cards and change PINs online, reducing paper usage and promoting environmental sustainability.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Financial Literacy and Inclusion Programs</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">Good to Know Campaign</h4>
+                            <p>This initiative aims to educate the public on saving and investing by providing financial tips and trends through various channels, reaching over 3.2 million individuals in 2023.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">PSBankabulary and Simpleng Tanong</h4>
+                            <p>These social media initiatives simplify banking and financial concepts, making them accessible to a broader audience.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For more detailed information on PSBank's CSR initiatives, you can visit their official website:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://www.psbank.com.ph/about-psbank/corporate-social-responsibility/" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Visit CSR Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="financial-statement">
+            <h2 class="section-title">Financial Statements</h2>
+            <div>
+                <p>PSBank's financial statements are prepared in accordance with Philippine accounting standards and are audited by independent external auditors. The bank's financial statements provide a comprehensive overview of its financial performance, including balance sheets, income statements, and cash flow statements.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Key Financial Metrics</h3>
+                    
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background-color: #0a4d8c; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Metric</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2023</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2022</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">2021</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Total Assets</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱275.6 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱261.8 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱250.9 billion</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Net Income</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱3.2 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱2.9 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱1.5 billion</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Loans and Receivables</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱168.3 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱160.2 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱142.5 billion</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Deposits</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱216.7 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱207.5 billion</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₱192.4 billion</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Capital Adequacy Ratio</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">24.5%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">23.7%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">21.9%</td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Return on Equity</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">8.8%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">8.3%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">4.5%</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Return on Assets</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">1.2%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">1.1%</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">0.6%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Operational Highlights</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Network Expansion</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">250</span><br>Branches nationwide</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">556</span><br>ATMs deployed</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Digital Transformation</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">65%</span><br>Transactions through digital channels</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">1.8M+</span><br>Active digital users</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 200px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Market Leadership</h4>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">#1</span><br>In Auto Loans among thrift banks</p>
+                            <p><span style="font-size: 24px; font-weight: bold; color: #0a4d8c;">#2</span><br>Largest thrift bank in the Philippines</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Growth Trends</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 20px;">
+                        <div style="flex: 1; min-width: 230px;">
+                            <h4 style="margin-bottom: 10px;">Consumer Loan Portfolio Growth</h4>
+                            <div style="background-color: #f5f5f5; border-radius: 8px; padding: 15px;">
+                                <div style="height: 25px; background-color: #0a4d8c; width: 85%; margin-bottom: 8px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2021</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+8.5%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 90%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2022</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+9.0%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 95%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2023</span>
+                                    <span style="font-size: 14px; font-weight: bold;">+9.5%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 230px;">
+                            <h4 style="margin-bottom: 10px;">Digital Banking Adoption</h4>
+                            <div style="background-color: #f5f5f5; border-radius: 8px; padding: 15px;">
+                                <div style="height: 25px; background-color: #0a4d8c; width: 75%; margin-bottom: 8px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2021</span>
+                                    <span style="font-size: 14px; font-weight: bold;">45%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 85%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2022</span>
+                                    <span style="font-size: 14px; font-weight: bold;">55%</span>
+                                </div>
+                                
+                                <div style="height: 25px; background-color: #0a4d8c; width: 100%; margin-bottom: 8px; margin-top: 12px; border-radius: 4px;"></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 14px;">2023</span>
+                                    <span style="font-size: 14px; font-weight: bold;">65%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p><strong>Note:</strong> The financial and operational data presented here are illustrative and may not reflect the actual current performance of PSBank. For the most accurate and up-to-date financial information, please refer to PSBank's official financial statements and annual reports published on their website or filed with regulatory authorities.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="financial">
+            <h2 class="section-title">Financial Performance</h2>
+            <div>
+                <p>PSBank has demonstrated strong financial performance over the years, with consistent growth in net income, total assets, loans, and deposits. Below are highlights from the bank's audited financial statements for the past six years.</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">PSBank Audited Financial Statements (2019–2021)</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2019</h4>
+                            <div>
+                                <p>PSBank reported a net income of ₱2.11 billion, reflecting a 3.3% increase from the previous year. The bank's total assets grew by 4.5% to ₱359.3 billion, driven by a 6.1% rise in loans and a 5.2% increase in deposits.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2020</h4>
+                            <div>
+                                <p>In the face of the COVID-19 pandemic, PSBank achieved a net income of ₱2.27 billion, up 7.6% from 2019. Total assets expanded by 5.9% to ₱380.7 billion, with loans increasing by 5.3% and deposits by 6.4%.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2021</h4>
+                            <div>
+                                <p>The bank's net income reached ₱2.75 billion, marking a 20.9% growth year-on-year. Total assets rose by 6.8% to ₱406.3 billion, supported by a 7.8% increase in loans and a 6.5% rise in deposits.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: #0a4d8c; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">PSBank Audited Financial Statements (2022–2024)</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 30px;">
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2022</h4>
+                            <div>
+                                <p>PSBank achieved a record net income of ₱3.68 billion, a 139% increase from the previous year. Total assets grew by 8.6% to ₱442.7 billion, with loans increasing by 10.2% and deposits by 9.4%.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2023</h4>
+                            <div>
+                                <p>The bank reported a net income of ₱4.53 billion, up 23% from 2022. Total assets expanded by 9.3% to ₱483.3 billion, driven by a 12% growth in loans and a 10% rise in deposits.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            <h4 style="color: #0a4d8c; margin-bottom: 15px;">2024</h4>
+                            <div>
+                                <p>PSBank posted a net income of ₱5.30 billion, reflecting a 17% increase year-on-year. Total assets reached ₱520.7 billion, with loans growing by 14% and deposits by 11%.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 40px 0; background-color: #f9f9f9; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h3 style="color: #0a4d8c; margin-bottom: 15px; text-align: center;">Financial Performance Trends (2019-2024)</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 25px;">
+                        <div style="flex: 1; min-width: 220px; max-width: 280px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="font-size: 32px; color: #0a4d8c; margin-bottom: 10px;">
+                                <span>📈</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Net Income</h4>
+                            <p>151% growth</p>
+                            <p style="color: #666; font-size: 14px;">From ₱2.11B to ₱5.30B</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 220px; max-width: 280px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="font-size: 32px; color: #0a4d8c; margin-bottom: 10px;">
+                                <span>💰</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Total Assets</h4>
+                            <p>45% growth</p>
+                            <p style="color: #666; font-size: 14px;">From ₱359.3B to ₱520.7B</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 220px; max-width: 280px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="font-size: 32px; color: #0a4d8c; margin-bottom: 10px;">
+                                <span>🏦</span>
+                            </div>
+                            <h4 style="color: #0a4d8c; margin-bottom: 10px;">Loan Portfolio</h4>
+                            <p>Consistent growth</p>
+                            <p style="color: #666; font-size: 14px;">Double-digit growth in recent years</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>For detailed financial statements and further information, you can access PSBank's official financial reports:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px;">
+                        <a href="https://www.psbank.com.ph/media/7046/2022-audited-financial-statements.pdf?utm_source=chatgpt.com" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">2022 Financial Statements</a>
+                        <a href="https://www.psbank.com.ph/media/7892/2023-psbank-audited-financial-statements.pdf" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">2023 Financial Statements</a>
+                        <a href="https://www.psbank.com.ph/media/7907/psbank-2024-sec-17-a-annual-report.pdf" target="_blank" style="display: inline-block; background-color: #0a4d8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">2024 Annual Report</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add the new sections after the existing content sections -->
+        <div class="content-section" id="team">
+            <h2 class="section-title">Our Team</h2>
+            <div>
+                <p>Meet the talented individuals who have contributed to this project on PSBank.</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 30px; margin: 40px 0; justify-content: center;">
+                    <div class="profile-card" style="min-width: 280px; max-width: 320px;">
+                        <div class="profile-img">
+                            <img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t39.30808-6/476000527_947712274118556_6251123447730257692_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeEQTeOsZthz0HMiFQOB3YoCoPTwnZYE602g9PCdlgTrTWfstiRlav9WN-FC4x_keVaY9XE-6WZ4H28M5FsD8NPs&_nc_ohc=lEOPTpsjtywQ7kNvwGK1cS5&_nc_oc=Admav-e2-U0C9JDia5j-w2Hki8YGvC3qLqKbUo0rPDqDu_qWBhwV6Hx57rOkwdcT2FE&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&_nc_gid=NCPFfACq_8o15CmIpgbLIw&oh=00_AfHUPVZ_m-6EgdmzRyhDfvSGdtzi6x3lfHcWyCPi1QE3Yw&oe=680E81EF" alt="Team Member" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EJD%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: var(--primary); margin-bottom: 5px; font-size: 20px;">Lean T. Tongco</h3>
+                        <p style="color: var(--secondary); font-weight: 500; margin-bottom: 15px;">BSBA STUDENT</p>
+                        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card" style="min-width: 280px; max-width: 320px;">
+                        <div class="profile-img">
+                            <img src="https://scontent.fcgy2-2.fna.fbcdn.net/v/t39.30808-6/491353819_1367019494515830_1103023495970872037_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6UGbQ8--m53b7REVdP5tRXaZxsd2IWz9dpnGx3YhbP0lTHUVMw0y1ZZLC5mXD2_i6LtfGazSP--L8BvVrLxtF&_nc_ohc=fFc25ofxia4Q7kNvwFN4rFb&_nc_oc=Adm2MyYmp-kIJuA7K1Qd9iYhP5MySqlJu4xHGMVzq1WHx_nAS2poAUnIWTtSE4Yc6aE&_nc_zt=23&_nc_ht=scontent.fcgy2-2.fna&_nc_gid=1bYhFnBZU2CTAhysmDvEAg&oh=00_AfEWdVPbioOt2CpL8ZI5VfwKLuMJEG7A_cSZqcpeerCxJw&oe=680E728B" alt="Team Member" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Crect fill%3D%22%230a4d8c%22 width%3D%22100%22 height%3D%22100%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2230%22 fill%3D%22%23fff%22%3EJS%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        </div>
+                        <h3 style="color: var(--primary); margin-bottom: 5px; font-size: 20px;"> Ella Mae A. Tinhay</h3>
+                        <p style="color: var(--secondary); font-weight: 500; margin-bottom: 15px;">BSBA STUDENT</p>
+                        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="references">
+            <h2 class="section-title">References</h2>
+            <div>
+                <p>This website was created using information from the following sources:</p>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: var(--primary); margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Official Sources</h3>
+                    
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="padding: 15px; background-color: white; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <h4 style="color: var(--primary); margin-bottom: 8px;">PSBank Official Website</h4>
+                            <p style="margin-bottom: 10px; color: var(--text-light);">Primary source for information about PSBank's products, services, and corporate information.</p>
+                            <a href="https://www.psbank.com.ph" target="_blank" style="color: var(--secondary); font-weight: 500; text-decoration: none;">www.psbank.com.ph</a>
+                        </li>
+                        
+                        <li style="padding: 15px; background-color: white; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <h4 style="color: var(--primary); margin-bottom: 8px;">PSBank Annual Reports</h4>
+                            <p style="margin-bottom: 10px; color: var(--text-light);">Financial data and corporate information sourced from PSBank's annual reports.</p>
+                            <a href="https://www.psbank.com.ph/about-psbank/investor-relations/" target="_blank" style="color: var(--secondary); font-weight: 500; text-decoration: none;">Investor Relations Page</a>
+                        </li>
+                        
+                        <li style="padding: 15px; background-color: white; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <h4 style="color: var(--primary); margin-bottom: 8px;">PSBank Audited Financial Statements</h4>
+                            <p style="margin-bottom: 10px; color: var(--text-light);">Financial data sourced from official audited financial statements.</p>
+                            <a href="https://www.psbank.com.ph/media/7046/2022-audited-financial-statements.pdf" target="_blank" style="color: var(--secondary); font-weight: 500; text-decoration: none;">2022 Financial Statements</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3 style="color: var(--primary); margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Secondary Sources</h3>
+                    
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="padding: 15px; background-color: white; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <h4 style="color: var(--primary); margin-bottom: 8px;">Bangko Sentral ng Pilipinas (BSP)</h4>
+                            <p style="margin-bottom: 10px; color: var(--text-light);">Information about banking regulations and statistics in the Philippines.</p>
+                            <a href="https://www.bsp.gov.ph" target="_blank" style="color: var(--secondary); font-weight: 500; text-decoration: none;">www.bsp.gov.ph</a>
+                        </li>
+                        
+                        <li style="padding: 15px; background-color: white; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <h4 style="color: var(--primary); margin-bottom: 8px;">Philippine Stock Exchange (PSE)</h4>
+                            <p style="margin-bottom: 10px; color: var(--text-light);">Market and stock information related to PSBank's public listing.</p>
+                            <a href="https://www.pse.com.ph" target="_blank" style="color: var(--secondary); font-weight: 500; text-decoration: none;">www.pse.com.ph</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="disclaimer">
+            <h2 class="section-title">Disclaimer</h2>
+            <div>
+                <div style="background-color: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow-sm); margin: 20px 0; border-left: 4px solid var(--secondary);">
+                    <h3 style="color: var(--primary); margin-bottom: 20px;">Educational Purpose</h3>
+                    
+                    <p style="margin-bottom: 15px; line-height: 1.7;">This website has been created for <strong>educational purposes only</strong>. It is designed as a learning resource about Philippine Savings Bank (PSBank) and is not an official representation of PSBank or any of its affiliates.</p>
+                    
+                    <p style="margin-bottom: 15px; line-height: 1.7;">The information presented on this website has been compiled from various sources including publicly available information, but may not be completely accurate, up-to-date, or comprehensive. While efforts have been made to ensure the accuracy of the information, we cannot guarantee it is free from errors or omissions.</p>
+                    
+                    <p style="margin-bottom: 15px; line-height: 1.7;">This website does not provide financial advice, investment recommendations, or any form of professional guidance. Visitors should not rely on this information for making financial decisions. For official information about PSBank's products, services, or financial matters, please visit their official website or contact their customer service directly.</p>
+                    
+                    <p style="margin-bottom: 15px; line-height: 1.7;">The use of PSBank's name, logo, and other related information is for identification and educational purposes only. This website is not endorsed by, directly affiliated with, maintained, authorized, or sponsored by PSBank or any of its subsidiaries or affiliates.</p>
+                    
+                    <p style="margin-bottom: 0; line-height: 1.7;">All trademarks, service marks, trade names, and logos used on this website belong to their respective owners.</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding: 20px; border-top: 1px solid #eee;">
+                    <p style="color: var(--text-light); font-style: italic;">This educational website was last updated on June 2024.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu li');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            // Set the first menu item as active initially
+            menuItems[0].classList.add('active');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all menu items
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    
+                    // Add active class to clicked menu item
+                    this.classList.add('active');
+                    
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Trigger reflow for animation
+                    const targetSection = document.getElementById(sectionId);
+                    void targetSection.offsetWidth;
+                    
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Scroll to top when changing sections
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Animate stat counters when visible
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            const counterElements = document.querySelectorAll('.stat-counter');
+            counterElements.forEach(el => observer.observe(el));
+            
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.info-card, .profile-card, .financial-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = 'var(--shadow-md)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'var(--shadow-sm)';
+                });
+            });
+        });
+    </script>
+
+    <script src="https://kit.fontawesome.com/123456789a.js" crossorigin="anonymous"></script>
+</body>
+</html> 
